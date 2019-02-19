@@ -8,7 +8,7 @@ class MoviesController extends Controller
 {
     public function index()
     {
-        $movies = Movie::paginate(32);
+        $movies = Movie::paginate(24);
 
         return response()->json($movies);
     }
