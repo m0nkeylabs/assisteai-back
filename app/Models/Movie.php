@@ -37,15 +37,11 @@ class Movie extends Model
         'deleted_at',
     ];
 
-    /**
-     * "name": "Spider-Man: Into the",
-     * "type": "MOVIE",
-     * "averageRating": "UNMISSABLE",
-     * "lastRating": "VERY_GOOD",
-     * "urlPoster": "https://image.tmdb.or...",
-     * "urlIndication": "https://www.imd..",
-     * "watchLater": true
-     */
+    protected $appends = [
+        'average_rating',
+        'last_rating',
+        'watch_later',
+    ];
 
     /**
      * The attributes that should be mutated to dates.
@@ -53,6 +49,36 @@ class Movie extends Model
      * @var array
      */
     protected $dates = ['deleted_at'];
+
+    public function getAverageRatingAttribute()
+    {
+        // @TODO implement this
+        return 'Imperdível';
+    }
+
+    public function getBackdropPathAttribute($value)
+    {
+        // @TODO implement this
+        return 'test' . $value;
+    }
+
+    public function getLastRatingAttribute()
+    {
+        // @TODO implement this
+        return 'Imperdível';
+    }
+
+    public function getPosterPathAttribute($value)
+    {
+        // @TODO implement this
+        return 'test' . $value;
+    }
+
+    public function getWatchLaterAttribute()
+    {
+        // @TODO implement this
+        return false;
+    }
 
     public function threads()
     {

@@ -8,7 +8,9 @@ class MoviesController extends Controller
 {
     public function index()
     {
-        $movies = Movie::paginate(24);
+        $movies = Movie::join('threads', 'movies.id', '=', 'threads.movie_id')
+            ->orderBy('threads.id', 'desc')
+            ->paginate(24);
 
         return response()->json($movies);
     }
