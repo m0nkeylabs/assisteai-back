@@ -13,7 +13,7 @@ class MoviesController extends Controller
         $movies = Movie::select($columns)
             ->join('threads', 'movies.id', '=', 'threads.movie_id')
             ->groupBy($columns)
-            ->orderBy('threads.id', 'desc')
+            ->orderBy('threads.created_at', 'desc')
             ->paginate(24);
 
         return response()->json($movies);
