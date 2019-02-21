@@ -53,31 +53,36 @@ class Movie extends Model
     public function getAverageRatingAttribute()
     {
         // @TODO implement this
-        return 'Imperdível';
+        return 'UNMISSABLE';
     }
 
     public function getBackdropPathAttribute($value)
     {
         // @TODO implement this
-        return 'test' . $value;
+        return 'https://image.tmdb.org/t/p/w185' . $value;
     }
 
     public function getLastRatingAttribute()
     {
         // @TODO implement this
-        return 'Imperdível';
+        return 'UNMISSABLE';
     }
 
     public function getPosterPathAttribute($value)
     {
         // @TODO implement this
-        return 'test' . $value;
+        return 'https://image.tmdb.org/t/p/w185' . $value;
     }
 
     public function getWatchLaterAttribute()
     {
         // @TODO implement this
         return false;
+    }
+
+    public function getCategoryAttribute($value)
+    {
+        return mb_strtoupper($value);
     }
 
     public function threads()

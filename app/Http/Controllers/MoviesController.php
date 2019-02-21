@@ -8,7 +8,8 @@ class MoviesController extends Controller
 {
     public function index()
     {
-        $movies = Movie::join('threads', 'movies.id', '=', 'threads.movie_id')
+        $movies = Movie::select('movies.*')
+            ->join('threads', 'movies.id', '=', 'threads.movie_id')
             ->orderBy('threads.id', 'desc')
             ->paginate(24);
 
