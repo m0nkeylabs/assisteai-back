@@ -82,6 +82,9 @@ class Movie extends Model
 
     public function getCategoryAttribute($value)
     {
+        if ($value === 'tv') {
+            $value = 'serie';
+        }
         return mb_strtoupper($value);
     }
 
