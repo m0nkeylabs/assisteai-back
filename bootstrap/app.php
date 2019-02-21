@@ -24,10 +24,10 @@ $app = new Laravel\Lumen\Application(
 );
 
 //$app->configure('app');
-//$app->configure('services');
 
 $app->withFacades(true, [
     Illuminate\Database\Eloquent\Model::class => 'Eloquent',
+    Laravel\Socialite\Facades\Socialite::class => 'Socialite',
 ]);
 $app->withEloquent();
 
@@ -87,10 +87,11 @@ $app->register(App\Providers\AppServiceProvider::class);
 $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
+$app->register(Laravel\Socialite\SocialiteServiceProvider::class);
 
 // Ide-helper, only for dev environments
 if ($app->environment() !== 'production') {
-    $app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
+    $app->register(Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
 }
 
 /*
@@ -109,5 +110,8 @@ $app->router->group([
 ], function ($router) {
     require __DIR__ . '/../routes/web.php';
 });
+
+$app->configure('app');
+$app->configure('services');
 
 return $app;

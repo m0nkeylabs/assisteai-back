@@ -81,41 +81,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public static function createOrUpdateGraphNode($data)
-    {
-        if ($data instanceof GraphObject || $data instanceof GraphNode) {
-            $data = array_dot($data->asArray());
-        }
-        $fields = ['id', 'name', 'email', 'picture.url'];
-        $wanted_data = [];
-        foreach ($fields as $field) {
-            $wanted_data[$field] = $data[$field];
-        }
-
-        $wanted_data['provider'] = 'Facebook';
-        $wanted_data['access_token'] = \Session::get('fb_user_access_token');
-        $wanted_data['last_login_at'] = date('Y-m-d H:i:s');
-
-        $wanted_data = static::convertGraphNodeDateTimesToStrings($wanted_data);
-
-        if (!isset($wanted_data['id'])) {
-            throw new \InvalidArgumentException('Graph node id is missing');
-        }
-
-        $attributes = [static::getGraphNodeKeyName() => $wanted_data['id']];
-
-        $graph_node = static::firstOrNewGraphNode($attributes);
-
-        static::mapGraphNodeFieldNamesToDatabaseColumnNames($graph_node, $wanted_data);
-
-        $graph_node->save();
-
-        return $graph_node;
-    }
-
-    /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *
      * @return mixed

@@ -3,7 +3,7 @@
 
 /**
  * A helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel Lumen (5.7.7) (Laravel Components 5.7.*) on 2019-02-20 18:09:41.
+ * Generated for Laravel Lumen (5.7.7) (Laravel Components 5.7.*) on 2019-02-21 15:59:35.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -16,13 +16,8 @@ namespace Illuminate\Support\Facades {
     /**
      * 
      *
-     * @method static bool attempt(array $credentials = [], bool $remember = false)
-     * @method static bool once(array $credentials = [])
-     * @method static void login(\Illuminate\Contracts\Auth\Authenticatable $user, bool $remember = false)
      * @method static \Illuminate\Contracts\Auth\Authenticatable loginUsingId(mixed $id, bool $remember = false)
-     * @method static bool onceUsingId(mixed $id)
      * @method static bool viaRemember()
-     * @method static void logout()
      * @method static \Symfony\Component\HttpFoundation\Response|null onceBasic(string $field = 'email',array $extraConditions = [])
      * @method static null|bool logoutOtherDevices(string $password, string $attribute = 'password')
      * @see \Illuminate\Auth\AuthManager
@@ -194,12 +189,24 @@ namespace Illuminate\Support\Facades {
         /**
          * Get the currently authenticated user.
          *
-         * @return \App\User|null 
+         * @return \App\Models\User|null 
          * @static 
          */ 
         public static function user()
         {
-            return \Illuminate\Auth\RequestGuard::user();
+            return \Tymon\JWTAuth\JWTGuard::user();
+        }
+        
+        /**
+         * Get the currently authenticated user or throws an exception.
+         *
+         * @throws \Tymon\JWTAuth\Exceptions\UserNotDefinedException
+         * @return \App\Models\User 
+         * @static 
+         */ 
+        public static function userOrFail()
+        {
+            return \Tymon\JWTAuth\JWTGuard::userOrFail();
         }
         
         /**
@@ -211,7 +218,220 @@ namespace Illuminate\Support\Facades {
          */ 
         public static function validate($credentials = array())
         {
-            return \Illuminate\Auth\RequestGuard::validate($credentials);
+            return \Tymon\JWTAuth\JWTGuard::validate($credentials);
+        }
+        
+        /**
+         * Attempt to authenticate the user using the given credentials and return the token.
+         *
+         * @param array $credentials
+         * @param bool $login
+         * @return bool|string 
+         * @static 
+         */ 
+        public static function attempt($credentials = array(), $login = true)
+        {
+            return \Tymon\JWTAuth\JWTGuard::attempt($credentials, $login);
+        }
+        
+        /**
+         * Create a token for a user.
+         *
+         * @param \Tymon\JWTAuth\Contracts\JWTSubject $user
+         * @return string 
+         * @static 
+         */ 
+        public static function login($user)
+        {
+            return \Tymon\JWTAuth\JWTGuard::login($user);
+        }
+        
+        /**
+         * Logout the user, thus invalidating the token.
+         *
+         * @param bool $forceForever
+         * @return void 
+         * @static 
+         */ 
+        public static function logout($forceForever = false)
+        {
+            \Tymon\JWTAuth\JWTGuard::logout($forceForever);
+        }
+        
+        /**
+         * Refresh the token.
+         *
+         * @param bool $forceForever
+         * @param bool $resetClaims
+         * @return string 
+         * @static 
+         */ 
+        public static function refresh($forceForever = false, $resetClaims = false)
+        {
+            return \Tymon\JWTAuth\JWTGuard::refresh($forceForever, $resetClaims);
+        }
+        
+        /**
+         * Invalidate the token.
+         *
+         * @param bool $forceForever
+         * @return \Tymon\JWTAuth\JWT 
+         * @static 
+         */ 
+        public static function invalidate($forceForever = false)
+        {
+            return \Tymon\JWTAuth\JWTGuard::invalidate($forceForever);
+        }
+        
+        /**
+         * Create a new token by User id.
+         *
+         * @param mixed $id
+         * @return string|null 
+         * @static 
+         */ 
+        public static function tokenById($id)
+        {
+            return \Tymon\JWTAuth\JWTGuard::tokenById($id);
+        }
+        
+        /**
+         * Log a user into the application using their credentials.
+         *
+         * @param array $credentials
+         * @return bool 
+         * @static 
+         */ 
+        public static function once($credentials = array())
+        {
+            return \Tymon\JWTAuth\JWTGuard::once($credentials);
+        }
+        
+        /**
+         * Log the given User into the application.
+         *
+         * @param mixed $id
+         * @return bool 
+         * @static 
+         */ 
+        public static function onceUsingId($id)
+        {
+            return \Tymon\JWTAuth\JWTGuard::onceUsingId($id);
+        }
+        
+        /**
+         * Alias for onceUsingId.
+         *
+         * @param mixed $id
+         * @return bool 
+         * @static 
+         */ 
+        public static function byId($id)
+        {
+            return \Tymon\JWTAuth\JWTGuard::byId($id);
+        }
+        
+        /**
+         * Add any custom claims.
+         *
+         * @param array $claims
+         * @return $this 
+         * @static 
+         */ 
+        public static function claims($claims)
+        {
+            return \Tymon\JWTAuth\JWTGuard::claims($claims);
+        }
+        
+        /**
+         * Get the raw Payload instance.
+         *
+         * @return \Tymon\JWTAuth\Payload 
+         * @static 
+         */ 
+        public static function getPayload()
+        {
+            return \Tymon\JWTAuth\JWTGuard::getPayload();
+        }
+        
+        /**
+         * Alias for getPayload().
+         *
+         * @return \Tymon\JWTAuth\Payload 
+         * @static 
+         */ 
+        public static function payload()
+        {
+            return \Tymon\JWTAuth\JWTGuard::payload();
+        }
+        
+        /**
+         * Set the token.
+         *
+         * @param \Tymon\JWTAuth\Token|string $token
+         * @return $this 
+         * @static 
+         */ 
+        public static function setToken($token)
+        {
+            return \Tymon\JWTAuth\JWTGuard::setToken($token);
+        }
+        
+        /**
+         * Set the token ttl.
+         *
+         * @param int $ttl
+         * @return $this 
+         * @static 
+         */ 
+        public static function setTTL($ttl)
+        {
+            return \Tymon\JWTAuth\JWTGuard::setTTL($ttl);
+        }
+        
+        /**
+         * Get the user provider used by the guard.
+         *
+         * @return \Illuminate\Contracts\Auth\UserProvider 
+         * @static 
+         */ 
+        public static function getProvider()
+        {
+            return \Tymon\JWTAuth\JWTGuard::getProvider();
+        }
+        
+        /**
+         * Set the user provider used by the guard.
+         *
+         * @param \Illuminate\Contracts\Auth\UserProvider $provider
+         * @return $this 
+         * @static 
+         */ 
+        public static function setProvider($provider)
+        {
+            return \Tymon\JWTAuth\JWTGuard::setProvider($provider);
+        }
+        
+        /**
+         * Return the currently cached user.
+         *
+         * @return \App\Models\User|null 
+         * @static 
+         */ 
+        public static function getUser()
+        {
+            return \Tymon\JWTAuth\JWTGuard::getUser();
+        }
+        
+        /**
+         * Get the current request instance.
+         *
+         * @return \Illuminate\Http\Request 
+         * @static 
+         */ 
+        public static function getRequest()
+        {
+            return \Tymon\JWTAuth\JWTGuard::getRequest();
         }
         
         /**
@@ -223,19 +443,30 @@ namespace Illuminate\Support\Facades {
          */ 
         public static function setRequest($request)
         {
-            return \Illuminate\Auth\RequestGuard::setRequest($request);
+            return \Tymon\JWTAuth\JWTGuard::setRequest($request);
+        }
+        
+        /**
+         * Get the last user we attempted to authenticate.
+         *
+         * @return \App\Models\User 
+         * @static 
+         */ 
+        public static function getLastAttempted()
+        {
+            return \Tymon\JWTAuth\JWTGuard::getLastAttempted();
         }
         
         /**
          * Determine if current user is authenticated. If not, throw an exception.
          *
-         * @return \App\User 
+         * @return \App\Models\User 
          * @throws \Illuminate\Auth\AuthenticationException
          * @static 
          */ 
         public static function authenticate()
         {
-            return \Illuminate\Auth\RequestGuard::authenticate();
+            return \Tymon\JWTAuth\JWTGuard::authenticate();
         }
         
         /**
@@ -246,7 +477,7 @@ namespace Illuminate\Support\Facades {
          */ 
         public static function hasUser()
         {
-            return \Illuminate\Auth\RequestGuard::hasUser();
+            return \Tymon\JWTAuth\JWTGuard::hasUser();
         }
         
         /**
@@ -257,7 +488,7 @@ namespace Illuminate\Support\Facades {
          */ 
         public static function check()
         {
-            return \Illuminate\Auth\RequestGuard::check();
+            return \Tymon\JWTAuth\JWTGuard::check();
         }
         
         /**
@@ -268,7 +499,7 @@ namespace Illuminate\Support\Facades {
          */ 
         public static function guest()
         {
-            return \Illuminate\Auth\RequestGuard::guest();
+            return \Tymon\JWTAuth\JWTGuard::guest();
         }
         
         /**
@@ -279,7 +510,7 @@ namespace Illuminate\Support\Facades {
          */ 
         public static function id()
         {
-            return \Illuminate\Auth\RequestGuard::id();
+            return \Tymon\JWTAuth\JWTGuard::id();
         }
         
         /**
@@ -291,30 +522,7 @@ namespace Illuminate\Support\Facades {
          */ 
         public static function setUser($user)
         {
-            return \Illuminate\Auth\RequestGuard::setUser($user);
-        }
-        
-        /**
-         * Get the user provider used by the guard.
-         *
-         * @return \Illuminate\Contracts\Auth\UserProvider 
-         * @static 
-         */ 
-        public static function getProvider()
-        {
-            return \Illuminate\Auth\RequestGuard::getProvider();
-        }
-        
-        /**
-         * Set the user provider used by the guard.
-         *
-         * @param \Illuminate\Contracts\Auth\UserProvider $provider
-         * @return void 
-         * @static 
-         */ 
-        public static function setProvider($provider)
-        {
-            \Illuminate\Auth\RequestGuard::setProvider($provider);
+            return \Tymon\JWTAuth\JWTGuard::setUser($user);
         }
         
         /**
@@ -327,7 +535,7 @@ namespace Illuminate\Support\Facades {
          */ 
         public static function macro($name, $macro)
         {
-            \Illuminate\Auth\RequestGuard::macro($name, $macro);
+            \Tymon\JWTAuth\JWTGuard::macro($name, $macro);
         }
         
         /**
@@ -340,7 +548,7 @@ namespace Illuminate\Support\Facades {
          */ 
         public static function mixin($mixin)
         {
-            \Illuminate\Auth\RequestGuard::mixin($mixin);
+            \Tymon\JWTAuth\JWTGuard::mixin($mixin);
         }
         
         /**
@@ -352,7 +560,21 @@ namespace Illuminate\Support\Facades {
          */ 
         public static function hasMacro($name)
         {
-            return \Illuminate\Auth\RequestGuard::hasMacro($name);
+            return \Tymon\JWTAuth\JWTGuard::hasMacro($name);
+        }
+        
+        /**
+         * Dynamically handle calls to the class.
+         *
+         * @param string $method
+         * @param array $parameters
+         * @return mixed 
+         * @throws \BadMethodCallException
+         * @static 
+         */ 
+        public static function macroCall($method, $parameters)
+        {
+            return \Tymon\JWTAuth\JWTGuard::macroCall($method, $parameters);
         }
          
     }
