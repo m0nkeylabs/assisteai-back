@@ -59,7 +59,7 @@ class Movie extends Model
     public function getBackdropPathAttribute($value)
     {
         // @TODO implement this
-        return 'https://image.tmdb.org/t/p/w185' . $value;
+        return 'https://image.tmdb.org/t/p/w500' . $value;
     }
 
     public function getLastRatingAttribute()
@@ -71,7 +71,7 @@ class Movie extends Model
     public function getPosterPathAttribute($value)
     {
         // @TODO implement this
-        return 'https://image.tmdb.org/t/p/w185' . $value;
+        return 'https://image.tmdb.org/t/p/w500' . $value;
     }
 
     public function getWatchLaterAttribute()
