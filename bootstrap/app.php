@@ -26,7 +26,9 @@ $app = new Laravel\Lumen\Application(
 //$app->configure('app');
 //$app->configure('services');
 
-//$app->withFacades();
+$app->withFacades(true, [
+    Illuminate\Database\Eloquent\Model::class => 'Eloquent',
+]);
 $app->withEloquent();
 
 /*
@@ -61,9 +63,10 @@ $app->singleton(
 |
 */
 
-// $app->middleware([
-//     App\Http\Middleware\ExampleMiddleware::class
-// ]);
+$app->middleware([
+    App\Http\Middleware\CorsMiddleware::class,
+]);
+
 
 $app->routeMiddleware([
     'auth' => App\Http\Middleware\Authenticate::class,
