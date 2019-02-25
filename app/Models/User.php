@@ -18,7 +18,11 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      *
      * @var array
      */
-    protected $dates = ['deleted_at'];
+    protected $dates = [
+        'create_at',
+        'updated_at',
+        'deleted_at'
+    ];
 
     /**
      * The attributes excluded from the model's JSON form.
@@ -26,6 +30,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $hidden = [
+        'username',
         'password',
         'remember_token',
         'access_token',
@@ -33,7 +38,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'updated_at',
         'deleted_at',
         'provider',
-        'provider_id'
+        'provider_id',
     ];
 
     /**
@@ -53,22 +58,25 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     ];
 
     /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'theme',
+    ];
+
+    /**
      * The database table used by the model.
      *
      * @var string
      */
     protected $table = 'users';
 
-    /**
-     * Mapping the facebook fields to database columns
-     *
-     * @var array
-     */
-    protected static $graph_node_field_aliases = [
-        'id' => 'provider_id',
-        'picture.is_silhouette' => null,
-        'picture.url' => 'avatar',
-    ];
+    public function getThemeAttribute()
+    {
+        return 'BLUE';
+    }
 
     public function posts()
     {
