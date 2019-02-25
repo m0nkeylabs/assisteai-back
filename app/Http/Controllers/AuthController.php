@@ -50,7 +50,7 @@ class AuthController extends Controller
 
             $token = app('auth')->login($user, true);
 
-            return $this->respondWithToken($token, $user);
+            return $this->respondWithToken($token, compact('user'));
         } catch (ClientException $e) {
             return response()->json([
                 'success' => false,
