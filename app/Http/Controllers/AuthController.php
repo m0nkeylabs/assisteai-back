@@ -79,7 +79,10 @@ class AuthController extends Controller
     {
         app('auth')->logout();
 
-        return response()->json(['message' => 'Logout realizado com sucesso.']);
+        return response()->json([
+            'success' => true,
+            'message' => 'Logout realizado com sucesso.'
+        ]);
     }
 
     /**
