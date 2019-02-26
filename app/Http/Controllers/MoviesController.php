@@ -25,6 +25,6 @@ class MoviesController extends Controller
                 ->orWhere('description', 'like', '%' . $query . '%');
         }
 
-        return response()->json($movies->paginate());
+        return response()->json($movies->paginate(24));
     }
 }

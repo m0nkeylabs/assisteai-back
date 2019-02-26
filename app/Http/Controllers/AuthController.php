@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Carbon\Carbon;
 use GuzzleHttp\Exception\ClientException;
-use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
 
