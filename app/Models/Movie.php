@@ -43,6 +43,16 @@ class Movie extends Model
         'watch_later',
     ];
 
+    protected $ratings = [
+        'Fique Longe' => 'STAY_AWAY',
+        'Muito Ruim' => 'VERY_BAD',
+        'Ruinzinho' => 'BAD',
+        'Legal' => 'COOL',
+        'Bom' => 'GOOD',
+        'Muito Bom' => 'VERY_GOOD',
+        'Imperdível' => 'UNMISSABLE',
+    ];
+
     /**
      * The attributes that should be mutated to dates.
      *
@@ -52,8 +62,14 @@ class Movie extends Model
 
     public function getAverageRatingAttribute()
     {
-        // @TODO implement this
-        return 'UNMISSABLE';
+        $threads = $this->threads()->get();
+
+        $sum = 0;
+        foreach ($threads as $thread) {
+            $sum += array_search($thread->rating, array_keys($this->ratings));
+        }
+
+        return array_values($this->ratings)[(int)floor($sum / $threads->count())];
     }
 
     public function getBackdropPathAttribute($value)
@@ -63,8 +79,8 @@ class Movie extends Model
 
     public function getLastRatingAttribute()
     {
-        // @TODO implement this
-        return 'UNMISSABLE';
+        $thread = $this->threads()->orderBy('created_at', 'desc')->first();
+        return $this->ratings[$thread->rating];
     }
 
     public function getPosterPathAttribute($value)
