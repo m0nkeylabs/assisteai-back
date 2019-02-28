@@ -34,8 +34,7 @@ class MoviesController extends Controller
         if ($query) {
             $movies->where('title', 'like', '%' . $query . '%')
                 ->orWhere('original_title', 'like', '%' . $query . '%')
-                ->orWhere('year', '=', $query)
-                ->orWhere('description', 'like', '%' . $query . '%');
+                ->orWhere('year', '=', $query);
         }
 
         return response()->json($movies->paginate(24));
