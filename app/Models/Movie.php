@@ -44,13 +44,13 @@ class Movie extends Model
     ];
 
     protected $ratings = [
-        'Fique Longe' => 'STAY_AWAY',
-        'Muito Ruim' => 'VERY_BAD',
-        'Ruinzinho' => 'BAD',
-        'Legal' => 'COOL',
-        'Bom' => 'GOOD',
-        'Muito Bom' => 'VERY_GOOD',
-        'Imperdível' => 'UNMISSABLE',
+        'STAY_AWAY' => 'Fique Longe',
+        'VERY_BAD' => 'Muito Ruim',
+        'BAD' => 'Ruinzinho',
+        'COOL' => 'Legal',
+        'GOOD' => 'Bom',
+        'VERY_GOOD' => 'Muito Bom',
+        'UNMISSABLE' => 'Imperdível',
     ];
 
     /**
@@ -65,11 +65,12 @@ class Movie extends Model
         $threads = $this->threads()->get();
 
         $sum = 0;
+        $keys = array_keys($this->ratings);
         foreach ($threads as $thread) {
-            $sum += array_search($thread->rating, array_keys($this->ratings));
+            $sum += array_search($thread->rating, $keys);
         }
 
-        return array_values($this->ratings)[(int)floor($sum / $threads->count())];
+        return $keys[(int) floor($sum / $threads->count())];
     }
 
     public function getBackdropPathAttribute($value)
@@ -80,7 +81,7 @@ class Movie extends Model
     public function getLastRatingAttribute()
     {
         $thread = $this->threads()->orderBy('created_at', 'desc')->first();
-        return $this->ratings[$thread->rating];
+        return $thread->rating;
     }
 
     public function getPosterPathAttribute($value)
@@ -238,7 +239,7 @@ class Movie extends Model
         $tmdb_result_en = self::callCurl('http://api.themoviedb.org/3/' . self::$category . '/' . self::$tmdb_id . '?api_key=' . env('TMDB_API_KEY'));
 
         // Merging data
-        return (object)array_merge(array_filter((array)$tmdb_result_en), array_filter((array)$tmdb_result_pt));
+        return (object) array_merge(array_filter((array) $tmdb_result_en), array_filter((array) $tmdb_result_pt));
     }
 
     /**
