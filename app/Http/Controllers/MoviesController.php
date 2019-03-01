@@ -88,7 +88,7 @@ class MoviesController extends Controller
 
             return response()->json([
                 'success' => false,
-                'message' => 'Erro catastrófico.',
+                'message' => ($e->getCode() === 1) ? $e->getMessage() : 'Erro catastrófico.',
             ], 500);
         }
     }

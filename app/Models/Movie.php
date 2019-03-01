@@ -121,7 +121,7 @@ class Movie extends Model
     public static function getOrCreate($external_url)
     {
         if (self::prepare($external_url) === false) {
-            throw new \Exception('Link IMDb/TMDb inválido.');
+            throw new \Exception('Link IMDb/TMDb inválido.', 1);
         }
 
         try {
@@ -220,10 +220,10 @@ class Movie extends Model
             $imdb_result = self::callCurl('https://api.themoviedb.org/3/find/' . self::$imdb_id . '?external_source=imdb_id&api_key=' . env('TMDB_API_KEY'));
 
             if (count($imdb_result->movie_results) > 0) {
-                self::$category = 'movie';
+                self::$category = 'MOVIE';
                 self::$tmdb_id = $imdb_result->movie_results[0]->id;
             } else {
-                self::$category = 'tv';
+                self::$category = 'SERIE';
                 self::$tmdb_id = $imdb_result->tv_results[0]->id;
             }
         }
