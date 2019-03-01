@@ -169,7 +169,7 @@ class Movie extends Model
                 'original_title' => (isset($movie_data->original_title)) ? $movie_data->original_title : $movie_data->original_name,
                 'year' => $year,
                 'slug' => $slug,
-                'category' => self::$category,
+                'category' => (self::$category === 'movie') ? 'MOVIE' : 'SERIE',
                 'genre' => implode(',', $genres),
                 'description' => $movie_data->overview,
                 'poster_path' => (isset($movie_data->poster_path)) ? $movie_data->poster_path : null,
@@ -228,10 +228,10 @@ class Movie extends Model
             $imdb_result = self::callCurl('https://api.themoviedb.org/3/find/' . self::$imdb_id . '?external_source=imdb_id&api_key=' . env('TMDB_API_KEY'));
 
             if (count($imdb_result->movie_results) > 0) {
-                self::$category = 'MOVIE';
+                self::$category = 'movie';
                 self::$tmdb_id = $imdb_result->movie_results[0]->id;
             } else {
-                self::$category = 'SERIE';
+                self::$category = 'tv';
                 self::$tmdb_id = $imdb_result->tv_results[0]->id;
             }
         }
