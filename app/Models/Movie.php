@@ -38,6 +38,7 @@ class Movie extends Model
     ];
 
     protected $appends = [
+        'imdb_link',
         'average_rating',
         'last_rating',
         'watch_later',
@@ -76,6 +77,13 @@ class Movie extends Model
     public function getBackdropPathAttribute($value)
     {
         return 'https://image.tmdb.org/t/p/w300' . $value;
+    }
+
+    public function getImdbLinkAttribute()
+    {
+        $external_ids = $this->externalIds()->where('name', '=', 'imdb')->first();
+        $imdb_id = ($external_ids) ? $external_ids->external_id : null;
+        return 'https://www.imdb.com/title/' . $imdb_id . '/';
     }
 
     public function getLastRatingAttribute()
