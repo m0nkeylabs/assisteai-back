@@ -14,12 +14,13 @@ class MoviesController extends Controller
         $query = $request->input('q');
         $filter = ($request->input('filter') === null) ? $request->input('filter') : json_decode(base64_decode($request->input('filter')));
 
-        $columns = ['movies.id', 'movies.title', 'movies.original_title', 'movies.year', 'movies.slug', 'movies.category', 'movies.genre', 'movies.description', 'movies.poster_path', 'movies.backdrop_path'];
+        $group_by = ['movies.id', 'movies.title', 'movies.original_title', 'movies.year', 'movies.slug', 'movies.category', 'movies.genre', 'movies.description', 'movies.poster_path', 'movies.backdrop_path'];
+        $select = [\DB::raw('MAX(`threads`.`created_at`) AS \'last_thread\'')];
 
-        $movies = Movie::select($columns)
+        $movies = Movie::select(array_merge($group_by, $select))
             ->join('threads', 'movies.id', '=', 'threads.movie_id')
-            ->groupBy($columns)
-            ->orderBy('threads.created_at', 'desc');
+            ->groupBy($group_by)
+            ->orderBy('last_thread', 'desc');
 
         if ($filter) {
             if (isset($filter->ratings) && !empty($filter->ratings)) {
