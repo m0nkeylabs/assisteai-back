@@ -27,6 +27,7 @@ class Movie extends Model
         'category',
         'genre',
         'description',
+        'original_description',
         'poster_path',
         'backdrop_path',
     ];
@@ -172,6 +173,7 @@ class Movie extends Model
                 'category' => (self::$category === 'movie') ? 'MOVIE' : 'SERIE',
                 'genre' => implode(',', $genres),
                 'description' => $movie_data->overview,
+                'original_description' => $movie_data->original_overview,
                 'poster_path' => (isset($movie_data->poster_path)) ? $movie_data->poster_path : null,
                 'backdrop_path' => (isset($movie_data->backdrop_path)) ? $movie_data->backdrop_path : null,
             ]);
@@ -241,10 +243,11 @@ class Movie extends Model
          * Portuguese data
          */
         $tmdb_result_pt = self::callCurl('http://api.themoviedb.org/3/' . self::$category . '/' . self::$tmdb_id . '?language=pt&api_key=' . env('TMDB_API_KEY'));
-        unset($tmdb_result_pt->poster_path, $tmdb_result_pt->backdrop_path);
+        unset($tmdb_result_pt->poster_path, $tmdb_result_pt->backdrop_path, $tmdb_result_pt->genres);
 
         // English data
         $tmdb_result_en = self::callCurl('http://api.themoviedb.org/3/' . self::$category . '/' . self::$tmdb_id . '?api_key=' . env('TMDB_API_KEY'));
+        $tmdb_result_en->original_overview = $tmdb_result_en->overview;
 
         // Merging data
         return (object) array_merge(array_filter((array) $tmdb_result_en), array_filter((array) $tmdb_result_pt));
