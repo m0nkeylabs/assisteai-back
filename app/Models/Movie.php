@@ -100,8 +100,13 @@ class Movie extends Model
 
     public function getWatchLaterAttribute()
     {
-        // @TODO implement this
-        return false;
+        if (!app('auth')->check()) {
+            return false;
+        }
+
+        $watch_later = $this->watchLaters()->where('user_id', '=', app('auth')->user()->id)->first();
+
+        return ($watch_later === null) ? false : true;
     }
 
     public function getCategoryAttribute($value)
@@ -112,14 +117,19 @@ class Movie extends Model
         return mb_strtoupper($value);
     }
 
+    public function externalIds()
+    {
+        return $this->hasMany(ExternalId::class);
+    }
+
     public function threads()
     {
         return $this->hasMany(Thread::class);
     }
 
-    public function externalIds()
+    public function watchLaters()
     {
-        return $this->hasMany(ExternalId::class);
+        return $this->hasMany(WatchLater::class);
     }
 
     /**
