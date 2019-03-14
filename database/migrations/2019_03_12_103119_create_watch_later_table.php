@@ -17,6 +17,9 @@ class CreateWatchLaterTable extends Migration
             $table->integer('movie_id')->unsigned();
             $table->integer('user_id')->unsigned();
             $table->timestamps();
+
+            $table->foreign('movie_id')->references('id')->on('movies');
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

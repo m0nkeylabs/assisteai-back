@@ -10,6 +10,11 @@ class WatchLater extends Model
 
     protected $table = 'watch_later';
 
+    protected $fillable = [
+        'movie_id',
+        'user_id',
+    ];
+
     public function movie()
     {
         return $this->belongsTo(Movie::class);
