@@ -21,7 +21,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     protected $dates = [
         'create_at',
         'updated_at',
-        'deleted_at'
+        'deleted_at',
     ];
 
     /**
@@ -80,12 +80,17 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
     public function posts()
     {
-        $this->hasMany(Post::class);
+        return $this->hasMany(Post::class);
     }
 
     public function threads()
     {
-        $this->hasMany(Thread::class);
+        return $this->hasMany(Thread::class);
+    }
+
+    public function watchLaters()
+    {
+        return $this->hasMany(WatchLater::class);
     }
 
     /**

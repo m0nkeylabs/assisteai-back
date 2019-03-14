@@ -20,5 +20,6 @@ $router->get('movies', 'MoviesController@index');
 $router->post('movies', ['uses' => 'MoviesController@store', 'middleware' => 'auth']);
 
 // watch later
+$router->get('watch-later', ['uses' => 'WatchLaterController@all', 'middleware' => 'auth']);
 $router->post('watch-later', ['uses' => 'WatchLaterController@store', 'middleware' => 'auth']);
 $router->delete('watch-later/{movie_id}', ['uses' => 'WatchLaterController@destroy', 'middleware' => 'auth']);

@@ -4,9 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\WatchLater;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class WatchLaterController extends Controller
 {
+    public function all()
+    {
+        $watch_later = app('auth')->user()->watchLaters()->select('movie_id')->get();
+
+        return response()->json([
+            'success' => true,
+            'movie_ids' => Arr::flatten($watch_later->toArray()),
+        ], 200);
+    }
+
     public function store(Request $request)
     {
         try {
