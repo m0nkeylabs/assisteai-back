@@ -36,13 +36,15 @@ class AuthController extends Controller
         try {
             $provider_user = Socialite::driver($provider)->userFromToken($request->input('token'));
 
+            dd($provider_user);
+
             $user = User::updateOrCreate([
                 'provider' => 'Facebook',
                 'provider_id' => $provider_user->id,
             ], [
                 'name' => $provider_user->name,
                 'email' => $provider_user->email,
-                'avatar' => $provider_user->avatar,
+                'avatar' => $provider_user->avatar_original,
                 'access_token' => $provider_user->token,
                 'last_login_at' => (string)Carbon::now(),
             ]);
