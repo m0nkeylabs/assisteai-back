@@ -35,9 +35,7 @@ class AuthController extends Controller
     {
         try {
             $provider_user = Socialite::driver($provider)->userFromToken($request->input('token'));
-
-            dd($provider_user);
-
+            
             $user = User::updateOrCreate([
                 'provider' => 'Facebook',
                 'provider_id' => $provider_user->id,
