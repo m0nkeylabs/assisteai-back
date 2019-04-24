@@ -34,8 +34,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'password',
         'remember_token',
         'access_token',
-        'created_at',
-        'updated_at',
         'deleted_at',
         'provider',
         'provider_id',
@@ -54,16 +52,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'username',
         'email',
         'avatar',
-        'last_login_at',
-    ];
-
-    /**
-     * The accessors to append to the model's array form.
-     *
-     * @var array
-     */
-    protected $appends = [
         'theme',
+        'last_login_at',
     ];
 
     /**
@@ -72,11 +62,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var string
      */
     protected $table = 'users';
-
-    public function getThemeAttribute()
-    {
-        return 'BLUE';
-    }
 
     public function posts()
     {

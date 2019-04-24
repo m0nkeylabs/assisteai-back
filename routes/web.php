@@ -14,6 +14,9 @@ $router->group(['prefix' => 'auth'], function () use ($router) {
     $router->post('login/{provider}', 'AuthController@authenticateWithProvider');
 });
 
+// profile
+$router->put('users', ['uses' => 'AuthController@update', 'middleware' => 'auth']);
+$router->post('users/avatar', ['uses' => 'AuthController@avatar', 'middleware' => 'auth']);
 
 // movies
 $router->get('movies', 'MoviesController@index');

@@ -114,10 +114,12 @@ return [
     */
 
     'attributes'           => [
-        'title'        => 'Título',
-        'rating'       => 'Avaliação',
+        'title' => 'Título',
+        'rating' => 'Avaliação',
         'external_url' => 'Link IMDb/TMDb',
         'url' => 'Link IMDb/TMDb',
+        'name' => 'Nome',
+        'email' => 'E-mail'
     ],
 
 ];

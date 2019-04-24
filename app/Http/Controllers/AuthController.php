@@ -35,7 +35,7 @@ class AuthController extends Controller
     {
         try {
             $provider_user = Socialite::driver($provider)->userFromToken($request->input('token'));
-            
+
             $user = User::updateOrCreate([
                 'provider' => 'Facebook',
                 'provider_id' => $provider_user->id,
@@ -61,6 +61,63 @@ class AuthController extends Controller
                 'message' => 'Erro catastrófico.',
             ], 500);
         }
+    }
+
+    /**
+     * Update user data
+     * @param  Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(Request $request)
+    {
+        $user = $request->user();
+
+        if($request->input('password')) {
+            $user->password = app('hash')->make($request->input('password'));
+        } elseif($request->input('theme')) {
+            $user->theme = $request->input('theme');
+        } else {
+            $this->validate($request, [
+                'name' => 'required|min:3',
+                'email' => 'required|email',
+            ]);
+
+            $user->name = $request->input('name');
+            $user->email = $request->input('email');
+        }
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'user' => $user,
+        ]);
+    }
+
+    public function avatar(Request $request)
+    {
+        $this->validate($request, [
+            'avatar' => 'required|image|max:8192',
+        ]);
+
+        $file = $request->file('avatar');
+        if ($file->isValid()) {
+            $target = $file->move(storage_path('app/user-avatar'), str_random(48) . '_' . time() . '.' . $file->getClientOriginalExtension());
+            $url = url('img/user-avatar/' . $target->getFilename());
+
+            $user = $request->user();
+            $user->avatar = $url;
+            $user->save();
+
+            return response()->json([
+                'success' => true,
+                'avatar' => $url,
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Houve um problema com o envio do seu avatar, tente novamente.'
+        ]);
     }
 
     /**

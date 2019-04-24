@@ -11,6 +11,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Response;
+use Illuminate\Validation\ValidationException;
 
 class Handler extends ExceptionHandler
 {
@@ -66,17 +67,23 @@ class Handler extends ExceptionHandler
         } elseif ($e instanceof AuthorizationException) {
             $status = Response::HTTP_FORBIDDEN;
             $e = new AuthorizationException('HTTP_FORBIDDEN', $status);
+        } elseif ($e instanceof ValidationException) {
+            $errors = collect($e->errors());
+            $message = $errors->first()[0];
+            $status = Response::HTTP_UNPROCESSABLE_ENTITY;
+            $e = new ValidationException('HTTP_UNPROCESSABLE_ENTITY', $status, $e);
         } elseif ($e instanceof \Dotenv\Exception\ValidationException && $e->getResponse()) {
             $status = Response::HTTP_BAD_REQUEST;
             $e = new \Dotenv\Exception\ValidationException('HTTP_BAD_REQUEST', $status, $e);
         } elseif ($e) {
             $e = new HttpException($status, 'HTTP_INTERNAL_SERVER_ERROR');
         }
+        $message = !isset($message) ? $e->getMessage() : $message;
 
         return response()->json([
             'success' => false,
             'status' => $status,
-            'message' => $e->getMessage(),
+            'message' => $message,
         ], $status);
     }
 }
