@@ -70,21 +70,21 @@ class AuthController extends Controller
      */
     public function update(Request $request)
     {
+        $this->validate($request, [
+            'name' => 'required|min:3',
+            'email' => 'required|email',
+            'theme' => 'required|in:YELLOW,GREEN,PINK,RED,BLUE',
+        ]);
+
         $user = $request->user();
 
         if($request->input('password')) {
             $user->password = app('hash')->make($request->input('password'));
-        } elseif($request->input('theme')) {
-            $user->theme = $request->input('theme');
-        } else {
-            $this->validate($request, [
-                'name' => 'required|min:3',
-                'email' => 'required|email',
-            ]);
-
-            $user->name = $request->input('name');
-            $user->email = $request->input('email');
         }
+
+        $user->name = $request->input('name');
+        $user->email = $request->input('email');
+        $user->theme = $request->input('theme');
         $user->save();
 
         return response()->json([
