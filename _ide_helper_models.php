@@ -42,13 +42,22 @@ namespace App\Models{
  * @property string $category
  * @property string $genre
  * @property string $description
+ * @property string $original_description
  * @property string|null $poster_path
  * @property string|null $backdrop_path
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ExternalId[] $externalIds
+ * @property-read int|null $external_ids_count
+ * @property-read mixed $average_rating
+ * @property-read mixed $imdb_link
+ * @property-read mixed $last_rating
+ * @property-read mixed $watch_later
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Thread[] $threads
+ * @property-read int|null $threads_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\WatchLater[] $watchLaters
+ * @property-read int|null $watch_laters_count
  * @method static bool|null forceDelete()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Movie newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Movie newQuery()
@@ -62,6 +71,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Movie whereDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Movie whereGenre($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Movie whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Movie whereOriginalDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Movie whereOriginalTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Movie wherePosterPath($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Movie whereSlug($value)
@@ -111,9 +121,10 @@ namespace App\Models{
  * @property int $id
  * @property string $name
  * @property string|null $username
+ * @property string|null $password
  * @property string $email
- * @property string|null $gender
  * @property string $avatar
+ * @property string|null $theme
  * @property string|null $provider
  * @property string $provider_id
  * @property string|null $access_token
@@ -122,6 +133,12 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Post[] $posts
+ * @property-read int|null $posts_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Thread[] $threads
+ * @property-read int|null $threads_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\WatchLater[] $watchLaters
+ * @property-read int|null $watch_laters_count
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User query()
@@ -130,13 +147,14 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereGender($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereLastLoginAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User wherePassword($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereProvider($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereProviderId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereRememberToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereTheme($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereUsername($value)
  */
@@ -157,6 +175,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property-read \App\Models\Movie $movie
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Post[] $posts
+ * @property-read int|null $posts_count
  * @property-read \App\Models\User $user
  * @method static bool|null forceDelete()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Thread newModelQuery()
@@ -176,5 +195,26 @@ namespace App\Models{
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Thread withoutTrashed()
  */
 	class Thread extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\WatchLater
+ *
+ * @property int $movie_id
+ * @property int $user_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Movie $movie
+ * @property-read \App\Models\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\WatchLater newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\WatchLater newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\WatchLater query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\WatchLater whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\WatchLater whereMovieId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\WatchLater whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\WatchLater whereUserId($value)
+ */
+	class WatchLater extends \Eloquent {}
 }
 

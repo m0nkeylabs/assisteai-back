@@ -18,6 +18,13 @@ class AuthController extends Controller
     {
         $token = app('auth')->attempt($request->only('username', 'password'), true);
 
+        if (!$token) {
+            return response()->json([
+                'success' => false,
+                'message' => 'INVALID_CREDENTIALS',
+            ], 401);
+        }
+
         // get user and update last login date
         $user = $request->user();
         $user->last_login_at = (string)Carbon::now();
