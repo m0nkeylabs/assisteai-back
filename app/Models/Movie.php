@@ -45,16 +45,6 @@ class Movie extends Model
         'watch_later',
     ];
 
-    protected $ratings = [
-        'STAY_AWAY' => 'Fique Longe',
-        'VERY_BAD' => 'Muito Ruim',
-        'BAD' => 'Ruinzinho',
-        'COOL' => 'Legal',
-        'GOOD' => 'Bom',
-        'VERY_GOOD' => 'Muito Bom',
-        'UNMISSABLE' => 'Imperdível',
-    ];
-
     /**
      * The attributes that should be mutated to dates.
      *
@@ -67,17 +57,17 @@ class Movie extends Model
         $threads = $this->threads()->get();
 
         $sum = 0;
-        $keys = array_keys($this->ratings);
+        $keys = array_values(Thread::RATINGS);
         foreach ($threads as $thread) {
             $sum += array_search($thread->rating, $keys);
         }
 
-        return $keys[(int) floor($sum / $threads->count())];
+        return $keys[(int) round($sum / $threads->count())];
     }
 
     public function getBackdropPathAttribute($value)
     {
-        return 'https://image.tmdb.org/t/p/w1280' . $value;
+        return isset($value) ? 'https://image.tmdb.org/t/p/w1280' . $value : null;
     }
 
     public function getImdbLinkAttribute()
@@ -90,12 +80,20 @@ class Movie extends Model
     public function getLastRatingAttribute()
     {
         $thread = $this->threads()->orderBy('created_at', 'desc')->first();
+
         return $thread->rating;
     }
 
     public function getPosterPathAttribute($value)
     {
-        return 'https://image.tmdb.org/t/p/w300' . $value;
+        if (!$value) return null;
+
+        return 'https://image.tmdb.org/t/p/w500' . $value;
+    }
+
+    public function getRatingCountAttribute()
+    {
+        return $this->threads()->count();
     }
 
     public function getWatchLaterAttribute()
@@ -109,13 +107,13 @@ class Movie extends Model
         return ($watch_later === null) ? false : true;
     }
 
-    public function getCategoryAttribute($value)
-    {
-        if ($value === 'tv') {
-            $value = 'serie';
-        }
-        return mb_strtoupper($value);
-    }
+    // public function getCategoryAttribute($value)
+    // {
+    //     if ($value === 'tv') {
+    //         $value = 'serie';
+    //     }
+    //     return mb_strtoupper($value);
+    // }
 
     public function externalIds()
     {
@@ -252,15 +250,15 @@ class Movie extends Model
          * TMDb
          * Portuguese data
          */
-        $tmdb_result_pt = self::callCurl('http://api.themoviedb.org/3/' . self::$category . '/' . self::$tmdb_id . '?language=pt&api_key=' . env('TMDB_API_KEY'));
+        $tmdb_result_pt = self::callCurl('http://api.themoviedb.org/3/' . self::$category . '/' . self::$tmdb_id . '?language=pt-BR&api_key=' . env('TMDB_API_KEY'));
         unset($tmdb_result_pt->poster_path, $tmdb_result_pt->backdrop_path, $tmdb_result_pt->genres);
 
-        // English data
-        $tmdb_result_en = self::callCurl('http://api.themoviedb.org/3/' . self::$category . '/' . self::$tmdb_id . '?api_key=' . env('TMDB_API_KEY'));
-        $tmdb_result_en->original_overview = $tmdb_result_en->overview;
+        // Original data
+        $tmdb_result_original = self::callCurl('http://api.themoviedb.org/3/' . self::$category . '/' . self::$tmdb_id . '?language=en-US&api_key=' . env('TMDB_API_KEY'));
+        $tmdb_result_original->original_overview = $tmdb_result_original->overview;
 
         // Merging data
-        return (object) array_merge(array_filter((array) $tmdb_result_en), array_filter((array) $tmdb_result_pt));
+        return (object) array_merge(array_filter((array) $tmdb_result_original), array_filter((array) $tmdb_result_pt));
     }
 
     /**

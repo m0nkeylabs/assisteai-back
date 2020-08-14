@@ -44,11 +44,11 @@ class AuthController extends Controller
             $provider_user = Socialite::driver($provider)->userFromToken($request->input('token'));
 
             $user = User::updateOrCreate([
-                'provider' => 'Facebook',
-                'provider_id' => $provider_user->id,
-            ], [
-                'name' => $provider_user->name,
                 'email' => $provider_user->email,
+            ], [
+                'provider' => $provider,
+                'provider_id' => $provider_user->id,
+                'name' => $provider_user->name,
                 'avatar' => $provider_user->avatar_original,
                 'access_token' => $provider_user->token,
                 'last_login_at' => (string)Carbon::now(),
@@ -63,6 +63,8 @@ class AuthController extends Controller
                 'message' => 'Token inválido.',
             ], $e->getResponse()->getStatusCode());
         } catch (\Exception $e) {
+            \Log::error('MoviesController@randomMovie', [$e]);
+
             return response()->json([
                 'success' => false,
                 'message' => 'Erro catastrófico.',
@@ -154,7 +156,10 @@ class AuthController extends Controller
      */
     public function me(Request $request)
     {
-        return $request->user();
+        return response()->json([
+            'success' => true,
+            'user' => $request->user(),
+        ]);
     }
 
     /**

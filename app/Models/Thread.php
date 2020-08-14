@@ -9,6 +9,16 @@ class Thread extends Model
 {
     use SoftDeletes;
 
+    const RATINGS = [
+        'STAY_AWAY' => 'Fique Longe',
+        'VERY_BAD' => 'Muito Ruim',
+        'BAD' => 'Ruinzinho',
+        'COOL' => 'Legal',
+        'GOOD' => 'Bom',
+        'VERY_GOOD' => 'Muito Bom',
+        'UNMISSABLE' => 'Imperdível',
+    ];
+
     protected $table = 'threads';
 
     protected $fillable = [
@@ -24,9 +34,14 @@ class Thread extends Model
     protected $dates = ['deleted_at'];
 
     public static $rules = [
-        'rating'       => 'required',
+        'rating' => 'required',
         'url' => 'required',
     ];
+
+    public function getRatingAttribute($value)
+    {
+        return self::RATINGS[$value];
+    }
 
     /**
      * @param $movie

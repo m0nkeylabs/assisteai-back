@@ -12,6 +12,7 @@ class MoviesController extends Controller
     public function index(Request $request)
     {
         $query = $request->input('q');
+        $per_page = (int) ($request->input('per_page') ?? 24);
         $filter = ($request->input('filter') === null) ? $request->input('filter') : json_decode(base64_decode($request->input('filter')));
 
         $group_by = ['movies.id', 'movies.title', 'movies.original_title', 'movies.year', 'movies.slug', 'movies.category', 'movies.genre', 'movies.description', 'movies.poster_path', 'movies.backdrop_path'];
@@ -40,57 +41,68 @@ class MoviesController extends Controller
                 ->orWhere('year', '=', $query);
         }
 
-        return response()->json($movies->paginate(24));
+        return response()->json($movies->paginate($per_page));
     }
 
-    public function store(Request $request)
+    public function randomMovie()
     {
         try {
-            $this->validate($request, [
-                'url' => 'required|url',
-                'rating' => 'required'
-            ]);
+            $movie = Movie::whereNotNull('backdrop_path')->whereHas('threads', function($query) {
+                return $query->whereIn('rating', ['UNMISSABLE', 'VERY_GOOD', 'GOOD', 'COOL']);
+            })->inRandomOrder()->limit(1)->first();
 
-            $movie = Movie::getOrCreate($request->input('url'));
-            $user = $request->user();
-
-            $thread = Thread::where('movie_id', '=', $movie->id)
-                ->where('user_id', '=', $user->id)
-                ->first();
-
-            if ($thread !== null) {
-                $phrase = ($movie->category === 'MOVIE') ? 'esse filme' : 'essa série';
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Você já avaliou ' . $phrase . '!',
-                ], 409);
-            }
-
-            $thread = new Thread();
-            $thread->movie_id = $movie->id;
-            $thread->user_id = $user->id;
-            $thread->comment = $request->input('comment');
-            $thread->rating = $request->input('rating');
-            $thread->save();
-
-            $movie = $movie->fresh();
+            $data = $this->getMovieData($movie);
 
             return response()->json([
                 'success' => true,
-                'movie' => $movie,
-            ], 200);
-        } catch(ValidationException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->validator->getMessageBag()->first(),
-            ], 422);
+                'data' => $data,
+            ]);
         } catch (\Exception $e) {
-            \Log::error('MoviesController@store', [$e]);
+            \Log::error('MoviesController@randomMovie', [$e]);
 
             return response()->json([
                 'success' => false,
-                'message' => ($e->getCode() === 1) ? $e->getMessage() : 'Erro catastrófico.',
-            ], 500);
+                'message' => 'Erro catastrófico.',
+            ]);
         }
+    }
+
+    public function details(Int $id)
+    {
+        try {
+            $movie = Movie::where('id', '=', $id)->with(['threads', 'threads.user'])->firstOrFail();
+
+            $data = $this->getMovieData($movie);
+
+            return response()->json([
+                'success' => true,
+                'data' => $data,
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('MoviesController@details', [$e]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Erro catastrófico.',
+            ]);
+        }
+    }
+
+    protected function getMovieData($movie) {
+        return [
+            'backdrop_path' => $movie->backdrop_path,
+            'original_title' => $movie->original_title,
+            'description' => $movie->description,
+            'poster_path' => $movie->poster_path,
+            'title' => $movie->title,
+            'genre' => $movie->genre,
+            'year' => $movie->year,
+            'rating' => [
+                'count' => $movie->rating_count,
+                'average' => $movie->average_rating,
+                'last' => $movie->last_rating,
+                'list' => $movie->threads
+            ],
+        ];
     }
 }
