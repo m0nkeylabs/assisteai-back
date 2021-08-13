@@ -21,7 +21,7 @@ $router->post('users/avatar', ['uses' => 'AuthController@avatar', 'middleware' =
 // movies
 $router->get('movies', 'MoviesController@index');
 $router->get('movies/random', 'MoviesController@randomMovie');
-$router->get('movies/{slug}', 'MoviesController@details');
+$router->get('movies/{id}', 'MoviesController@details');
 $router->post('movies/ratings', ['uses' => 'RatingsController@store', 'middleware' => 'auth']);
 
 // watch later

@@ -15,7 +15,18 @@ class MoviesController extends Controller
         $per_page = (int) ($request->input('per_page') ?? 24);
         $filter = ($request->input('filter') === null) ? $request->input('filter') : json_decode(base64_decode($request->input('filter')));
 
-        $group_by = ['movies.id', 'movies.title', 'movies.original_title', 'movies.year', 'movies.slug', 'movies.category', 'movies.genre', 'movies.description', 'movies.poster_path', 'movies.backdrop_path'];
+        $group_by = [
+            'movies.id',
+            'movies.title',
+            'movies.original_title',
+            'movies.year',
+            'movies.slug',
+            'movies.category',
+            'movies.genre',
+            'movies.description',
+            'movies.poster_path',
+            'movies.backdrop_path'
+        ];
         $select = [\DB::raw('MAX(`threads`.`created_at`) AS \'last_thread\'')];
 
         $movies = Movie::select(array_merge($group_by, $select))
@@ -47,7 +58,7 @@ class MoviesController extends Controller
     public function randomMovie()
     {
         try {
-            $movie = Movie::whereNotNull('backdrop_path')->whereHas('threads', function($query) {
+            $movie = Movie::whereNotNull('backdrop_path')->whereHas('threads', function ($query) {
                 return $query->whereIn('rating', ['UNMISSABLE', 'VERY_GOOD', 'GOOD', 'COOL']);
             })->inRandomOrder()->limit(1)->first();
 
@@ -67,7 +78,7 @@ class MoviesController extends Controller
         }
     }
 
-    public function details(Int $id)
+    public function details(int $id)
     {
         try {
             $movie = Movie::where('id', '=', $id)->with(['threads', 'threads.user'])->firstOrFail();
@@ -88,7 +99,8 @@ class MoviesController extends Controller
         }
     }
 
-    protected function getMovieData($movie) {
+    protected function getMovieData($movie)
+    {
         return [
             'backdrop_path' => $movie->backdrop_path,
             'original_title' => $movie->original_title,
@@ -101,7 +113,7 @@ class MoviesController extends Controller
                 'count' => $movie->rating_count,
                 'average' => $movie->average_rating,
                 'last' => $movie->last_rating,
-                'list' => $movie->threads
+                'list' => $movie->threads,
             ],
         ];
     }
