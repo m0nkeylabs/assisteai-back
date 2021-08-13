@@ -208,14 +208,14 @@ class Movie extends Model
      */
     private static function prepare($external_url)
     {
-        if (preg_match('/(tt\d{7})/', $external_url, $matches) !== 0) {
+        if (preg_match('/\/(tt\d+)\//', $external_url, $matches) !== 0) {
             self::$imdb_id = $matches[1];
             self::$external_provider = 'imdb';
 
             return true;
         }
 
-        if (preg_match('/(movie|tv)\/(\d{1,6})/', $external_url, $matches) !== 0) {
+        if (preg_match('/(movie|tv)\/(\d+)/', $external_url, $matches) !== 0) {
             self::$category = $matches[1];
             self::$tmdb_id = $matches[2];
             self::$external_provider = 'tmdb';
