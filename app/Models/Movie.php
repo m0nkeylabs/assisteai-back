@@ -42,6 +42,7 @@ class Movie extends Model
         'imdb_link',
         'average_rating',
         'last_rating',
+        'rating_count',
         'watch_later',
     ];
 
