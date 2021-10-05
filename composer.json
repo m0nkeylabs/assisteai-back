@@ -12,6 +12,7 @@
         "laravel/lumen-framework": "^8.0",
         "laravel/socialite": "^5.0",
         "league/flysystem": "^1.0",
+        "php-curl-class/php-curl-class": "^9.4",
         "tymon/jwt-auth": "^1.0.0-rc.3",
         "vlucas/phpdotenv": "^5.2"
     },

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Movie;
 use App\Models\Thread;
+use App\Services\TelegramBot;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
@@ -38,6 +39,8 @@ class RatingsController extends Controller
             $thread->comment = $request->input('comment');
             $thread->rating = $request->input('rating');
             $thread->save();
+            $tb = new TelegramBot();
+            $tb->sendMessage($thread);
 
             $movie = $movie->fresh();
 

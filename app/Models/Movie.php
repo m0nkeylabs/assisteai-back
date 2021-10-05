@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -134,12 +135,12 @@ class Movie extends Model
     /**
      * @param string $external_url
      * @return Movie
-     * @throws \Exception
+     * @throws Exception
      */
     public static function getOrCreate($external_url)
     {
         if (self::prepare($external_url) === false) {
-            throw new \Exception('Link IMDb/TMDb inválido.', 1);
+            throw new Exception('Link IMDb/TMDb inválido.', 1);
         }
 
         try {
@@ -207,7 +208,7 @@ class Movie extends Model
      * @param $external_url
      * @return bool
      */
-    private static function prepare($external_url)
+    private static function prepare($external_url): bool
     {
         if (preg_match('/\/(tt\d+)\//', $external_url, $matches) !== 0) {
             self::$imdb_id = $matches[1];
@@ -228,9 +229,9 @@ class Movie extends Model
     }
 
     /**
-     * @return mixed
+     * @return object
      */
-    private static function getMovieData()
+    private static function getMovieData(): object
     {
         /**
          * Necessary if user uses IMDb URL.
