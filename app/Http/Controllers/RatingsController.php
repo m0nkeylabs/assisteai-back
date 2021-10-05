@@ -36,7 +36,7 @@ class RatingsController extends Controller
             $thread = new Thread();
             $thread->movie_id = $movie->id;
             $thread->user_id = $user->id;
-            $thread->comment = $request->input('comment');
+            $thread->comment = $request->input('comment') ?? null;
             $thread->rating = $request->input('rating');
             $thread->save();
             $tb = new TelegramBot();

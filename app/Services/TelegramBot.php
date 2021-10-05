@@ -30,7 +30,7 @@ class TelegramBot
 
         $data = [
             'chat_id'    => env('TELEGRAM_CHATID'),
-            'text'       => '[' . $thread->movie->original_title . ' (' . $thread->movie->year . ')](http://assisteai.com.br/#' . $thread->id . '-' . Str::slug($thread->movie->original_title) . ')' . PHP_EOL . PHP_EOL .
+            'text'       => '[' . $thread->movie->original_title . ' (' . $thread->movie->year . ')](https://beta2.assisteai.com.br/' . $thread->movie->id . '-' . $thread->movie->slug . ')' . PHP_EOL . PHP_EOL .
                 '_' . $content . '_' . PHP_EOL . PHP_EOL .
                 '*' . $thread->rating . '* - ' . $thread->user->name,
             'parse_mode' => 'Markdown',
