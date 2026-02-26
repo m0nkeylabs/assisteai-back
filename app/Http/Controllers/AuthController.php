@@ -6,6 +6,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
@@ -110,7 +111,7 @@ class AuthController extends Controller
 
         $file = $request->file('avatar');
         if ($file->isValid()) {
-            $target = $file->move(storage_path('app/user-avatar'), str_random(48) . '_' . time() . '.' . $file->getClientOriginalExtension());
+            $target = $file->move(storage_path('app/user-avatar'), Str::random(48) . '_' . time() . '.' . $file->getClientOriginalExtension());
             $url = url('img/user-avatar/' . $target->getFilename());
 
             $user = $request->user();
